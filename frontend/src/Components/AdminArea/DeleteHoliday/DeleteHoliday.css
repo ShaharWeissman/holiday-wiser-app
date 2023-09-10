@@ -1,0 +1,21 @@
+.DeleteHoliday {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .DeleteHoliday:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .DeleteHoliday--checked {
+    background-color: #f44336;
+  }

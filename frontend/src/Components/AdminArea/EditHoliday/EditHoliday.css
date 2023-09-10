@@ -1,0 +1,12 @@
+/* EditHoliday.css */
+.SignUp.Box {
+    width: 300px;
+    margin: 0 auto;
+  }
+  
+  .icon Box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
