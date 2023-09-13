@@ -1,0 +1,7 @@
+{
+    "compilerOptions": {
+        "strictNullChecks": false,
+        "target": "ES5",
+        "esModuleInterop": true
+    }
+}

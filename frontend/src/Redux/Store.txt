@@ -1,0 +1,19 @@
+// import { configureStore } from '@reduxjs/toolkit';
+// import { combineReducers } from 'redux';
+// import { holidaysReducer } from './HolidaysState';
+// import { usersReducer } from './UsersState';
+// import { authReducer } from './AuthState';
+
+// const rootReducer = combineReducers({
+//   holidayState: holidaysReducer,
+//   usersState: usersReducer,
+//   authState: authReducer,
+//   // followsState: followsReducer,
+// });
+
+// const store = configureStore({
+//   reducer: rootReducer,
+//   middleware: [], // Add any middleware you need
+// });
+
+// export default store;

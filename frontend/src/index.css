@@ -1,0 +1,47 @@
+html,body {
+  height: 100%;
+  background-color: rgb(222, 241, 255);
+  overflow: hidden;
+}
+
+#root {
+  font-family: 'Ubuntu', sans-serif;
+  margin: 0;
+  height: 100%;
+  text-align: center;
+  font-style: pink;
+}
+
+a{
+  color: black;
+  font-family: 'Ubuntu', sans-serif;
+
+  
+
+}
+
+button{
+  font-family: 'Ubuntu', sans-serif;
+
+}
+
+.Box{
+  display: inline-block;
+  text-align: left;
+  padding:30px;
+  margin: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  ;}
+
+/* 
+  .Box{
+    width: 300px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    font-family: 'Ubuntu', sans-serif;
+  } */

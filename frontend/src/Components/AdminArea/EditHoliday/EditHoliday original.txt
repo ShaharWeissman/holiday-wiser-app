@@ -1,0 +1,173 @@
+import { Button, TextField } from "@mui/material";
+import "./EditHoliday.css";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import useTitle from "../../../Services/useTitle";
+import { NavLink, useParams } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import { DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { enUS } from "@mui/x-date-pickers/locales";
+import HolidayModel from "../../../Model/HolidayModel";
+import getHolidayById from "../../../Services/api";
+import holidaysService from "../../../Services/AdminService";
+import adminService from "../../../Services/AdminService";
+
+function EditHoliday(): JSX.Element {
+  useTitle("HolidayApp | edit-holiday");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const params = useParams();
+  const [holiday, setHoliday] = useState(location.state);
+
+  const handleInit = async () => {
+    if (!holiday?.id) {
+      try {
+        const res = await holidaysService.getHolidayById(+params.id);
+        setHoliday(res);
+      } catch (err) {
+        navigate("/admin/");      }
+    }
+  };
+
+  useEffect(() => {
+    handleInit();
+  }, []);
+
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+    console.dir(event.target);
+  };
+
+ async function deleteMe():Promise<void> {
+  try{
+const ok=window.confirm("are you sure you want to delete?")
+if(!ok) return;
+await adminService.deleteHoliday(holiday.id);
+console.log("holiday has been deleted");
+  }
+  catch(err:any){
+    console.log(err.message)
+  }
+    console.log("delete id " + holiday.id);
+  }
+
+  return (
+    <div>
+      {holiday?.id ? (
+        <>
+          <div className="MenuAdmin">
+            <div className="MenuAdminBox">
+              <NavLink to="/admin/home">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<AddIcon />}>
+                  back to home admin
+                </Button>
+              </NavLink>
+              <br />
+              <NavLink to="#" onClick={deleteMe}>
+                <Button variant="outlined" color="error" fullWidth>
+                  Delete Holiday
+                </Button>
+              </NavLink>
+            </div>
+          </div>
+
+          <div className="EditHoliday">
+            <div
+              className="SignUp Box"
+              style={{ width: "300px", margin: "0 auto" }}>
+              <form onSubmit={handleSubmit}>
+                <h2>Edit Holiday</h2>
+                <TextField
+                  id="destination"
+                  name="destination"
+                  label="destination"
+                  type="text"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  defaultValue={holiday.destination}
+                />
+                <TextField
+                  id="description"
+                  label="description"
+                  type="text"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  defaultValue={holiday.description}
+                />
+                <span>start on:</span>
+                <LocalizationProvider
+                  dateAdapter={AdapterDayjs}
+                  localeText={
+                    enUS.components.MuiLocalizationProvider.defaultProps
+                      .localeText
+                  }>
+                  <DatePicker
+                    slotProps={{ textField: { fullWidth: true } }}
+                    defaultValue={dayjs(holiday.start_date)}
+                  />
+                </LocalizationProvider>
+                <span>end on:</span>
+                <LocalizationProvider
+                  dateAdapter={AdapterDayjs}
+                  localeText={
+                    enUS.components.MuiLocalizationProvider.defaultProps
+                      .localeText
+                  }>
+                  <DatePicker
+                    slotProps={{ textField: { fullWidth: true } }}
+                    defaultValue={dayjs(holiday.end_date)}
+                  />
+                </LocalizationProvider>
+                <TextField
+                  id="price"
+                  label="price"
+                  type="number"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  defaultValue={holiday.price}
+                />
+                <div
+                  className="icon Box"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}>
+                  <img width={200} height={130} src={holiday.image_url} />
+                  <Button style={{ fontSize: 14 }}>
+                    <CloudUploadIcon />
+                    upload a photo*
+                  </Button>
+                </div>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  type="submit">
+                  Edit Holiday
+                </Button>
+
+                <hr />
+                <Button variant="outlined" color="primary" fullWidth>
+                  Cancel
+                </Button>
+              </form>
+            </div>
+          </div>
+        </>
+      ) : null}
+    </div>
+  );
+}
+
+export default EditHoliday;

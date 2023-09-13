@@ -1,0 +1,20 @@
+/* .CheckBox {
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: bolder;
+    font-size: 16px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 40px;
+    display: inline-block;
+  }
+   */
+  
+  
+  .CheckBox .MuiTypography-root {
+    font-family: 'Ubuntu', sans-serif;
+    font-size:18px;
+    
+  }
+  

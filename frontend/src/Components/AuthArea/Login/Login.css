@@ -1,0 +1,37 @@
+/* .Login.Box {
+    width: 300px; 
+    margin: 0 auto;}
+
+.BtnArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+  
+  .FormBox {
+    width: 450px;
+    margin: 5px;
+  }
+  
+  Button {
+    color: #000;
+    margin: 0 auto;
+    margin-left: 10px;
+  }
+  
+  .txtLine {
+    display: flex;
+    align-items: center;
+    margin: 24px 0;
+  }
+  
+  .txtLine::before,
+  .txtLine::after {
+    content: "";
+    flex-grow: 1;
+    height: 1px;
+    background: linear-gradient(to right, #a8b1bc, #fff, #a8b1bc);
+    margin: 0 10px;
+  }
+   */
