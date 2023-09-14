@@ -1,23 +1,23 @@
 import React from "react";
 
-type Vacation = {};
+type Holiday = {};
 type Props = {
-  vacation: Vacation;
+  Holiday: Holiday;
   editMode: "add" | "update";
-  submitHandler: () => Vacation;
+  submitHandler: () => Holiday;
 };
 
-const VacationForm = ({ vacation, editMode, submitHandler }: Props) => {
+const HolidayForm = ({ Holiday, editMode, submitHandler }: Props) => {
   return <div>index</div>;
 };
 
-export default VacationForm;
+export default HolidayForm;
 
 const x = () => {
-  return <VacationCard vacation={vacation}>
+  return <HolidayCard Holiday={Holiday}>
     <Button text={'a'} />
     <Button text={'b'} />
-  </VacationCard>
+  </HolidayCard>
 };
 
 {children}
