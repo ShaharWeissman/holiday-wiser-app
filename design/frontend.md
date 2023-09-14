@@ -7,6 +7,8 @@ main design of the app:
 - header (which will appear at all time)
 - menu admin/user with authorization accordingly
 - Routing to local components : `auth routes` ,`holiday routes`, `admin routes` 
+
+# Pages
 ## Auth
   - Login component :
    - login box : 
@@ -71,15 +73,169 @@ main design of the app:
     - axis y = counts of follower via server service followerCounts
     - axis x = present the holidays via server service getAllHoliday 
   
-### Services
+
+## HttpClient
 - api index endpoint to server via cors `baseURL + "/auth/`,`baseURL + "/holidays/`,`baseURL + "/admin/`
 - notifcation service : defines a notification service using the "notyf" library
 - interceptor service : defines
 
 
 ### Redux
-- authState component :`authActions`, `authReducer` ,`authStore`
+- authState :`authActions`, `authReducer` ,`authStore`
    -This code defines a Redux store and associated actions, reducers, and initial state for managing authentication state, including user tokens and user data.
-- holidayState component :`holidayActions` ,`holidayReducer`, `holidayStore`
-- followerState component :`followerActions`, `followerReducer` ,`followerStore`
+- holidayState :`holidayActions` ,`holidayReducer`, `holidayStore`
+- followerState :`followerActions`, `followerReducer` ,`followerStore`
+
+### Zustand
+- authState: 
+    - Mutations/Actions
+      - login
+      - signup
+      - logout
+    - state
+      - user (`id,role,....`)
+- Holidays
+    - Mutations
+      - getAll
+      - toggleFollow(`user.id,holiday[0].id`)
+    - state 
+      - (holidays)
+- Admin
+    - Mutations/Actions
+      - login
+      - signup
+      - logout
+      - addHoliday
+      - editHoliday
+      - deleteHoliday
+    - state
+      - user (`id,role,....`)
+
+# Routing
+
+## Admin
+ - Dashboard
+    - Add
+    - Edit
+    - Report
+      (Graph,download csv)
+## User
+ - Main ('/')
+## Auth
+ - Login
+ - Signup
+
+
+## TEMP
+
+```tsx
+type InputState = {value:any,type:'text'|'number'|'hidden'}
+type ActionItem = {label:string,callback:()=>void}
+type FormState = {
+  title:string,
+  values:{
+    [key:string]:InputState
+  },
+  actionItems:{
+       [key:string]:ActionItem
+  }
+}
+
+
+
+const Form = (formState:FormState) => {
+
+  // lets use https://react-hook-form.com/get-started
+
+  return <FormContainer>
+    <Title />
+    <FieldList>
+    {formState.values.map((inputState)=><Input {...inputState}/>)}
+    </FieldList>
+
+    <ButtonList>
+   {formState.actions.map((buttonState)=><Button {...buttonState} />)}
+    </ButtonList>
+
+    {hasLinksData && <Links text="hasLinksData.already have user?" link={txt:'hasLinksData.text',to:'hasLinksData.link'} />}
+  </FormContainer>
+}
+
+// LOGIN PAGE
+
+const LoginPage = ()=>{
+
+
+  const loginHanlder = ()=>{}
+
+  //example 
+  const formState = {
+    title:'FORM_TITLE',
+    values:{
+      email:{value:'',type:'text'}
+      password:{value:'',type:'text'}
+    },
+    actionItems:{
+      submit:{
+        label:'Login',
+        callback:loginHanlder
+      }
+    }
+  }
+
+
+  <Form title={'Login'} formState={formState}>
+}
+
+const SignupPage = ()=>{
+
+
+  const signUpHandler = ()=>{}
+
+  //example 
+  const formState = {
+    title:'Signup',
+    values:{
+      email:{value:'',type:'text'},
+      fname:{value:'',type:'text'},
+      lname:{value:'',type:'text'},
+      password:{value:'',type:'text'}
+    },
+    actionItems:{
+      submit:{
+        label:'SignUp',
+        callback:signUpHandler
+      }
+    }
+  }
+
+
+  <Form title={'SignUp'} formState={formState}>
+}
+
+const EditForm = ()=>{
+
+
+  const editHandler = ()=>{}
+
+  //example 
+  const formState = {
+    title:'Edit Holiday',
+    values:{
+      name:{value:'',type:'text'},
+      image:{value:{/*File*/},type:'file'},
+      /**/
+    },
+    actionItems:{
+      submit:{
+        label:'Save Edit',
+        callback:editHandler
+      }
+    }
+  }
+
+
+  <Form title={'SignUp'} formState={formState}>
+}
+```
 

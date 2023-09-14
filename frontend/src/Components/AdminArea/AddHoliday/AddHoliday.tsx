@@ -95,7 +95,7 @@ function AddHoliday(): JSX.Element {
                 fullWidth
                 margin="normal"
                 InputLabelProps={{
-                  shrink: true, 
+                  shrink: true,
                 }}
                 {...register("start_date")}
               />
@@ -109,7 +109,7 @@ function AddHoliday(): JSX.Element {
                 fullWidth
                 margin="normal"
                 InputLabelProps={{
-                  shrink: true, 
+                  shrink: true,
                 }}
                 {...register("end_date")}
               />
