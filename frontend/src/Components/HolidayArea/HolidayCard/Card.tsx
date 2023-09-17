@@ -80,11 +80,6 @@ function Card(props: CardProps): JSX.Element {
       )}
 
       {!props.hideFollowButton && (isFollowed ? "Unfollow" : "Follow")}
-
-      {/* <IconButton onClick={() => props.onEditHoliday(props.id)}>
-        <EditIcon />
-      </IconButton> */}
-      {children}
     </div>
   );
 }

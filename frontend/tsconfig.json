@@ -23,5 +23,5 @@
   },
   "include": [
     "src"
-, "../client/holiday-wiser-app/src/Components/LayoutArea/Page404",  ]
+, "../old-client/holiday-wiser-app/src/Components/LayoutArea/Page404",  ]
 }

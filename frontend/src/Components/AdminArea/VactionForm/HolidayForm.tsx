@@ -12,12 +12,3 @@ const HolidayForm = ({ Holiday, editMode, submitHandler }: Props) => {
 };
 
 export default HolidayForm;
-
-const x = () => {
-  return <HolidayCard Holiday={Holiday}>
-    <Button text={'a'} />
-    <Button text={'b'} />
-  </HolidayCard>
-};
-
-{children}
