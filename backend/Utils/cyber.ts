@@ -15,26 +15,30 @@ function getNewToken(user: UserModel): string {
   return token;
 }
 
-function verifyToken(request: Request): Promise<boolean> {
-  return new Promise<boolean>((resolve, reject) => {
+function verifyToken(request: Request): Promise<any | null> {
+  return new Promise<any | null>((resolve, reject) => {
     try {
       const header = request.header("authorization");
       if (!header) {
-        resolve(false);
+        resolve(null); // No token found, resolve with null
         return;
       }
       const token = header.substring(7);
       if (!token) {
-        resolve(false);
+        resolve(null); // Token is empty, resolve with null
         return;
       }
-      jwt.verify(token, jwtSecretKey, (err: JsonWebTokenError) => {
-        if (err) {
-          resolve(false);
-          return;
+      jwt.verify(
+        token,
+        jwtSecretKey,
+        (err: JsonWebTokenError, decodedToken: any) => {
+          if (err) {
+            resolve(null); // Token verification failed, resolve with null
+            return;
+          }
+          resolve(decodedToken); // Resolve with the decoded token
         }
-        resolve(true);
-      });
+      );
     } catch (err: any) {
       reject(err);
     }
@@ -70,5 +74,5 @@ export default {
   getNewToken,
   verifyToken,
   hashPassword,
-  comparePassword
+  comparePassword,
 };
