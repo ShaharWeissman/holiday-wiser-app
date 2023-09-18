@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import HolidayModel from "../Model/HolidayModel";
 
+export type CheckedMode = "all" | "followed" | "ongoing" | "upcoming";
 // 1. (GLOBAL STATE) on the level of AppState
 export class HolidaysState {
   public holidays: HolidayModel[] = [];
+  public mode: CheckedMode = "all";
 }
 
 //2. Types of Action
@@ -12,6 +14,7 @@ export enum HolidaysActionType {
   AddHoliday = "AddHoliday",
   EditHoliday = "EditHoliday",
   DeleteHoliday = "DeleteHoliday",
+  SetMode = "SetMode",
 }
 
 //3. action (interface help me create literal object!)
@@ -31,6 +34,9 @@ export function holidaysReducer(
   const newState = { ...currentState };
   //change according the action - the duplicate glbl state
   switch (action.type) {
+    case HolidaysActionType.SetMode:
+      newState.mode = action.payload;
+      break;
     case HolidaysActionType.SetAllHolidays:
       newState.holidays = action.payload;
       break;
@@ -47,8 +53,10 @@ export function holidaysReducer(
       break;
 
     case HolidaysActionType.DeleteHoliday: //payload=id for deletion
-    const indexForDelete = newState.holidays.findIndex(h=>h.id === action.payload);
-if (indexForDelete >= 0) newState.holidays.splice(indexForDelete, 1);
+      const indexForDelete = newState.holidays.findIndex(
+        (h) => h.id === action.payload
+      );
+      if (indexForDelete >= 0) newState.holidays.splice(indexForDelete, 1);
 
       // newState.holidays.filter((h) => h.id === action.payload.id);
       // localStorage.setItem("holidays", JSON.stringify(newState.holidays));
@@ -65,28 +73,9 @@ export const holidaysStore = configureStore({
   middleware: [],
 });
 
-// export function holidaysReducer(currentState: HolidaysState = new HolidaysState(), action: HolidayAction) {
-
-//     const newState = { ...currentState };
-//     switch (action.type) {
-//         case HolidayActionType.AddHoliday: // payload is the product
-//             newState.holiday.push(action.payload)
-//             break;
-
-//         case HolidayActionType.EditHoliday:// payload is the product to edit
-//             const indexToUpdate = newState.holiday.findIndex(p => p.id === action.payload.id)
-//             newState.holiday[indexToUpdate] = action.payload;
-//             break;
-
-//         case HolidayActionType.DeleteHoliday://payload id of holiday
-//             const indexToDelete = newState.holiday.findIndex(p => p.id === action.payload)
-//             newState.holiday.splice(indexToDelete, 1);
-//             break;
-
-//         case HolidayActionType.SetAllHolidays: //here payload = product array (allHolidays: HolidayModel[])
-//             newState.holiday = action.payload;
-//             console.log(newState.holiday);
-//             break;
-
-//     }
-// }
+export const setMode = (mode: CheckedMode) => {
+  return {
+    type: HolidaysActionType.SetMode,
+    payload: mode,
+  };
+};

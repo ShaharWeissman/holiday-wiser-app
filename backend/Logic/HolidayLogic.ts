@@ -25,7 +25,10 @@ FROM holidays`;
 
 // ===============Get A Holiday By ID ===============
 
-const getHolidayById = async (id: number): Promise<HolidayModel> => {
+const getHolidayById = async (
+  id: number,
+  userId: string
+): Promise<HolidayModel> => {
   const sqlCommand = `SELECT 
   id AS id,
   destination AS destination,
@@ -45,14 +48,17 @@ FROM holidays WHERE id = ${id}`;
   return holiday;
 };
 
-
 // =============== Add Holiday ===============
 
 const addHoliday = async (newHoliday: HolidayModel) => {
   newHoliday.validate();
 
-  const formattedStartDate = formatDate(newHoliday.start_date.toISOString().split("T")[0]);
-  const formattedEndDate = formatDate(newHoliday.end_date.toISOString().split("T")[0]);
+  const formattedStartDate = formatDate(
+    newHoliday.start_date.toISOString().split("T")[0]
+  );
+  const formattedEndDate = formatDate(
+    newHoliday.end_date.toISOString().split("T")[0]
+  );
 
   //save image
   const image_name = await imageHandler.saveImage(newHoliday.image);
@@ -75,7 +81,6 @@ const addHoliday = async (newHoliday: HolidayModel) => {
 
   return newHoliday;
 };
-
 
 // =============== Edit A Holiday ===============
 
@@ -112,14 +117,13 @@ const editHoliday = async (holiday: HolidayModel) => {
   return holiday;
 };
 
-
 // =============== Delete A Holiday ===============
 const deleteHoliday = async (id: number) => {
   console.log(`you have deleted holiday id ${id}`);
   //for deleting image of holiday
-  const oldImage = await getOldImage(id)
-// remove the actual image from folder
-await imageHandler.deleteImage(oldImage);
+  const oldImage = await getOldImage(id);
+  // remove the actual image from folder
+  await imageHandler.deleteImage(oldImage);
 
   const sqlCommand = `DELETE FROM holidays WHERE id=${id}`;
   dal_mysql.execute(sqlCommand);
@@ -128,7 +132,7 @@ await imageHandler.deleteImage(oldImage);
 // =============== Function For Date Type ===============
 
 function formatDate(dateString: string): string {
-  const parts = dateString.split('-');
+  const parts = dateString.split("-");
   const formattedDate = `${parts[0]}-${parts[1]}-${parts[2]}`;
   return formattedDate;
 }
@@ -142,7 +146,6 @@ async function getOldImage(id: number): Promise<string> {
   const image_name = holiday.image_name;
   return image_name;
 }
-
 
 export default {
   addHoliday,

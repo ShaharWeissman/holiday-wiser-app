@@ -19,6 +19,7 @@ async function signup(user: UserModel): Promise<string> {
   if (await isEmailTaken(user.email)) {
     throw new ValidationError(`Email: ${user.email} is already taken`);
   }
+  user.password = await cyber.hashPassword(user.password);
   // SQL command for  user
   const sqlCommand = `INSERT INTO users (first_name, last_name, email, password)
     VALUES ('${user.first_name}', '${user.last_name}', '${user.email}', '${user.password}')`;
@@ -41,27 +42,17 @@ async function isEmailTaken(email: string): Promise<boolean> {
 async function login(credentials: CredentialsModel): Promise<string> {
   // validation
   credentials.validate();
-  const sqlCommand = `SELECT * FROM users WHERE email = "${credentials.email}" AND password = "${credentials.password}"`; // execution
+
+  const sqlCommand = `SELECT * FROM users WHERE email = "${credentials.email}"`; // execution
+
   const users = await dal_mysql.execute(sqlCommand);
   const user = users[0];
+  if (!cyber.comparePassword(credentials.password, user.password)) {
+    throw new Error("user not authenticated");
+  }
   const token = cyber.getNewToken(user);
   return user.role + ":" + token;
 }
-
-//   if (users.length > 0){
-//     bcrypt.compare(credentials.password ,user.password ,(err, res) => {
-//    if(res) {
-//     return res;
-//     }
-//     else{
-//    throw new UnauthorizedError("email or password are incorrect");
-//     }
-//   })
-//   // generate jwt:
-//   const token = cyber.getNewToken(user);
-// console.log(token);
-//   return user;
-// }}
 
 // ===============Get User By ID===============
 

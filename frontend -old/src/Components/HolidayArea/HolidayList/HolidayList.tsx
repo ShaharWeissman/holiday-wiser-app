@@ -6,6 +6,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import notifyService from "../../../Services/NotifyService";
 import Card from "../HolidayCard/Card";
 import holidaysService from "../../../Services/HolidaysService";
+import { useSelector } from "react-redux";
+import { CheckedMode } from "../../../Redux/HolidaysState";
 
 interface Props {
   onClickedCard?: (holiday: HolidayModel) => void;
@@ -21,29 +23,45 @@ const HolidayList: FC<Props> = ({
   onDeleteHoliday,
 }) => {
   const [holidays, setHolidays] = useState<HolidayModel[]>([]);
+  const [filteredHolidays, setFilteredHolidays] = useState<HolidayModel[]>([]);
+
+  const filterHolidaysMode = useSelector(
+    (state: { mode: CheckedMode }) => state.mode
+  );
 
   useEffect(() => {
     //get holidays:
     holidaysService
       .getAllHolidays()
-      .then((backendHolidays) => setHolidays(backendHolidays))
+      .then((backendHolidays) => {
+        console.log("🚀 ~ file: HolidayList.tsx:37 ~ .then ~ backendHolidays:", backendHolidays)
+        
+        setFilteredHolidays(backendHolidays);
+        setHolidays(backendHolidays);
+      })
       .catch((err) => notifyService.error(err));
   }, []);
 
-  //fetching holiday data from api
-  // const handleInit = async () => {
-  //   try {
-  //     const res = await getHolidaysApi();
-  //     setHolidays(res.data);
-  //   } catch(err) {
-  //     console.log(err)
-  //   }
-  // }
-
   // useEffect(() => {
-  //   handleInit()
-  // }, []);
-  // =====
+  //   let filtered: HolidayModel[] = JSON.parse(JSON.stringify(holidays));
+  //   switch (filterHolidaysMode) {
+  //     case "all":
+  //       filtered = holidays;
+  //       break;
+  //     case "followed":
+  //       filtered = filteredHolidays.filter((holiday) => holiday);
+  //       break;
+  //     case "upcoming":
+  //       filtered = filteredHolidays.filter((holiday) => holiday);
+
+  //       break;
+  //     case "ongoing":
+  //       filtered = filteredHolidays.filter((holiday) => holiday);
+
+  //       break;
+  //       setFilteredHolidays(filtered);
+  //   }
+  // }, [filterHolidaysMode]);
 
   const handleClickedCard = (holiday: HolidayModel) => {
     onClickedCard?.(holiday);
@@ -51,8 +69,8 @@ const HolidayList: FC<Props> = ({
 
   return (
     <div className="HolidayList">
-      {holidays?.length &&
-        holidays.map((holiday: HolidayModel) => (
+      {filteredHolidays?.length &&
+        filteredHolidays.map((holiday: HolidayModel) => (
           <div key={holiday.id}>
             <Card
               onClick={() => handleClickedCard(holiday)}

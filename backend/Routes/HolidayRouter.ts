@@ -21,21 +21,24 @@ holidayRouter.get(
 );
 
 // ===============Get Holiday By ID Router===============
-holidayRouter.get("/:id([0-9]+)", async (request: Request, response: Response, next: NextFunction) => {
+holidayRouter.get("/:id([0-9]+)?/user", async (request: Request, response: Response, next: NextFunction) => {
   try {
-      // Get route id: 
-      const id = +request.params.id;
+    // Get route id:
+    const id = +request.params.id;
 
-      // Get one product from database: 
-      const holiday = await HolidayLogic.getHolidayById(id);
+    // Get userId from query parameters:
+    const userId = request.query.userId as string; // Assuming userId is a string
 
-      // Response back desired product: 
-      response.json(holiday);
-  }
-  catch (err: any) {
-      next(err);
+    // Use id and userId as needed, for example:
+    const holiday = await HolidayLogic.getHolidayById(id, userId);
+
+    // Respond with the desired product:
+    response.json(holiday);
+  } catch (err: any) {
+    next(err);
   }
 });
+
 
 
 // ===============Add Holiday Router===============
