@@ -10,10 +10,10 @@ import holidayRouter from "./Routes/HolidayRouter";
 // import followRouter from "./Routes/FollowRouter";
 import routeNotFound from "./MiddleWare/route-not-found";
 import authRouter from "./Routes/auth-router";
-import catchAll from "../backend/MiddleWare/catch-all";
 import infoConsole from "./MiddleWare/info-console";
 import expressFileUpload from "express-fileupload";
 import userRouter from "./Routes/UserRouter";
+import catchAll from "./MiddleWare/catch-all";
 
 //create server
 const server = express();
@@ -27,6 +27,7 @@ server.use(express.json());
 
 //where i will save the video files
 server.use(express.static("user_videos"));
+server.use('/assets',express.static("Assets"));
 
 //parse the body as json , for easy work
 server.use(bodyParser.json());

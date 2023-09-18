@@ -24,25 +24,22 @@ function Login(): JSX.Element {
   //   }
   // }
 
-async function loginUser (credentials: CredentialsModel){
-axios.post(indexConfig.loginUrl, credentials)
-.then (response => {
-notifyService.success("you have been logged in");
-console.log(response.data.role);
- if (response.data.role == "admin" ){
-  navigate("/admin");
-  localStorage.setItem("user", response.data.role)
-}
-else
-      navigate("/home");
-      localStorage.setItem("user", response.data.role)
-
-      console.log(response);
-})
-.catch(err => {
-  notifyService.error(err);
-})
-}
+  async function loginUser(credentials: CredentialsModel) {
+    axios
+      .post(indexConfig.loginUrl, credentials)
+      .then((response) => {
+        notifyService.success("you have been logged in");
+        const [role, token] = response.data.split(":");
+        console.log({ r: response.data });
+        localStorage.setItem("user", role);
+        localStorage.setItem("token", token);
+        navigate(role === "admin" ? "/admin" : "/home");
+        console.log(response);
+      })
+      .catch((err) => {
+        notifyService.error(err);
+      });
+  }
 
   return (
     <>

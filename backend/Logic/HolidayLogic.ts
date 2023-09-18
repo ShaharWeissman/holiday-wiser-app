@@ -33,7 +33,7 @@ const getHolidayById = async (id: number): Promise<HolidayModel> => {
   DATE_FORMAT(start_date, '%d-%m-%Y') AS start_date,
   DATE_FORMAT(end_date, '%d-%m-%Y') AS end_date, 
   price AS price,
-  CONCAT('${config.domainName}/api/holidays/', image_name) AS image_url
+  image_name
 FROM holidays WHERE id = ${id}`;
   //take the holiday from database that contain one holiday - it returns array:
   const holidays = await dal_mysql.execute(sqlCommand);
@@ -41,7 +41,7 @@ FROM holidays WHERE id = ${id}`;
   const holiday = holidays[0];
   // in case holiday not exist
   if (!holiday) throw new ResourceNotFoundError(id);
-  holiday.image_url = `${config.domainName}/api/holidays/images/${holiday.image_name}`;
+  holiday.image_url = `${config.domainName}/assets/images/${holiday.image_name}`;
   return holiday;
 };
 
