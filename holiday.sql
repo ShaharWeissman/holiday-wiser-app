@@ -26,6 +26,7 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `follow`
 --
+use holiday;
 
 CREATE TABLE `follow` (
   `userId` int(11) NOT NULL,
