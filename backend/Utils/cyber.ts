@@ -31,7 +31,8 @@ function verifyToken(request: Request): Promise<any | null> {
       jwt.verify(
         token,
         jwtSecretKey,
-        (err: JsonWebTokenError, decodedToken: any) => {
+        // 
+        (err, decodedToken) => {
           if (err) {
             resolve(null); // Token verification failed, resolve with null
             return;

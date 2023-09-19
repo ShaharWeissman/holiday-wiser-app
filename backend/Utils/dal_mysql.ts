@@ -1,4 +1,4 @@
-import mysql, { OkPacket } from "mysql";
+import mysql from "mysql2";
 import config from "../Utils/Config";
 
 // Creating a connection pool
@@ -10,10 +10,8 @@ const connection = mysql.createPool({
   port: 3306,
 });
 
-// const execute = (sql: string, parameters?: any[]): Promise<any> => {
-  const execute = (sql: string): Promise<any> => {
+const execute = (sql: string): Promise<any> => {
   return new Promise<any>((resolve, reject) => {
-    // Connection and execute the SQL command
     connection.query(sql, (err, res) => {
       if (err) {
         reject(err);
@@ -23,6 +21,16 @@ const connection = mysql.createPool({
       resolve(res);
     });
   });
+};
+
+// Function to test the connection
+export const testConnection = async () => {
+  try {
+    await execute("SELECT 1");
+    console.log("Database connection established successfully!");
+  } catch (error) {
+    console.error("Failed to establish a database connection!", error);
+  }
 };
 
 export default { execute };

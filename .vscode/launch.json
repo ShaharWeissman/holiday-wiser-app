@@ -5,9 +5,9 @@
       "type": "node",
       "request": "launch",
       "name": "Run Server",
-      "args": ["src/main.ts"],
+      "args": ["server.ts"],
       "runtimeExecutable": "nodemon",
-      "cwd": "${workspaceFolder}/server",
+      "cwd": "${workspaceFolder}/backend",
       "skipFiles": ["<node_internals>/**"],
       "runtimeArgs": ["-r", "ts-node/register/transpile-only", "-r", "tsconfig-paths/register"],
 
@@ -17,13 +17,13 @@
       "type": "node",
       "request": "launch",
       "name": "Run Tests Windows",
-      "program": "${workspaceFolder}/server/node_modules/jest-cli/bin/jest.js",
+      "program": "${workspaceFolder}/backend/node_modules/jest-cli/bin/jest.js",
       "args": [
         "--runInBand",
         "--config",
         "jest.config.js"
       ],
-      "cwd": "${workspaceFolder}/server",
+      "cwd": "${workspaceFolder}/backend",
       "skipFiles": [
         "<node_internals>/**"
       ],
@@ -33,13 +33,13 @@
       "type": "node",
       "request": "launch",
       "name": "Run Tests",
-      "program": "${workspaceFolder}/server/node_modules/.bin/jest",
+      "program": "${workspaceFolder}/backend/node_modules/.bin/jest",
       "args": [
         "--runInBand",
         "--config",
         "jest.config.js"
       ],
-      "cwd": "${workspaceFolder}/server",
+      "cwd": "${workspaceFolder}/backend",
       "skipFiles": [
         "<node_internals>/**"
       ],
