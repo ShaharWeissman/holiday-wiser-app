@@ -14,6 +14,7 @@ import infoConsole from "./MiddleWare/info-console";
 import expressFileUpload from "express-fileupload";
 import userRouter from "./Routes/UserRouter";
 import catchAll from "./MiddleWare/catch-all";
+import { testConnection } from "./Utils/dal_mysql";
 
 //create server
 const server = express();
@@ -27,7 +28,7 @@ server.use(express.json());
 
 //where i will save the video files
 server.use(express.static("user_videos"));
-server.use('/assets',express.static("Assets"));
+server.use('/assets', express.static("Assets"));
 
 //parse the body as json , for easy work
 server.use(bodyParser.json());
@@ -49,6 +50,8 @@ server.use("*", routeNotFound);
 
 server.use(catchAll);
 
-server.listen(config.WebPort, () => {
+server.listen(config.WebPort, async () => {
+  // Call the testConnection function on app start
+  testConnection();
   console.log(`Listening on the http://localhost:${config.WebPort}`);
 });
