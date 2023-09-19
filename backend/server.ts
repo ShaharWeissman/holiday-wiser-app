@@ -1,3 +1,8 @@
+declare module 'express-serve-static-core' {
+  export interface Request {
+    user?: UserModel;
+  }
+}
 //imports
 require("dotenv").config();
 import bodyParser from "body-parser";
@@ -15,6 +20,7 @@ import expressFileUpload from "express-fileupload";
 import userRouter from "./Routes/UserRouter";
 import catchAll from "./MiddleWare/catch-all";
 import { testConnection } from "./Utils/dal_mysql";
+import UserModel from "./Models/UserModel";
 
 //create server
 const server = express();

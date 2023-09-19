@@ -1,7 +1,47 @@
 {
+    "compileOnSave": false,
     "compilerOptions": {
-        "strictNullChecks": false,
-        "target": "ES5",
-        "esModuleInterop": true
-    }
+        "noEmitOnError": false,
+        "rootDir": ".",
+        "strict": true,
+        "alwaysStrict": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictPropertyInitialization": false,
+        "allowSyntheticDefaultImports": true,
+        "incremental": true,
+        "noImplicitAny": true,
+        "sourceMap": true,
+        "declaration": false,
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "target": "es2021",
+        "module": "commonjs",
+        "lib": [
+            "es2021",
+            "dom"
+        ],
+        "skipLibCheck": true,
+        "skipDefaultLibCheck": true,
+        "baseUrl": ".",
+        "esModuleInterop": true,
+        "paths": {
+            "@/*": [
+                "./*"
+            ],
+            "@types/*": [
+                "./types/*"
+            ]
+        },
+        "typeRoots": [
+            "./types",
+            "./node_modules/@types"
+        ]
+    },
+    "exclude": [
+        "node_modules",
+        "tmp"
+    ]
 }
