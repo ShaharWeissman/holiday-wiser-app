@@ -16,8 +16,8 @@ router.post(
     try {
       console.log(request.body);
       const user = new UserModel(request.body);
-      const token = await AuthLogic.signup(user);
-      response.status(StatusCode.Created).json(token);
+      const roleAndTokenStr = await AuthLogic.signup(user);
+      response.status(StatusCode.Created).json(roleAndTokenStr);
     } catch (err: any) {
       next(err);
     }
@@ -30,8 +30,8 @@ router.post(
   async (request: Request, response: Response, next: NextFunction) => {
     try {
       const credentials = new CredentialsModel(request.body);
-      const token = await AuthLogic.login(credentials);
-      response.json(token);
+      const roleAndTokenStr = await AuthLogic.login(credentials);
+      response.json(roleAndTokenStr);
     } catch (err: any) {
       next(err);
     }
