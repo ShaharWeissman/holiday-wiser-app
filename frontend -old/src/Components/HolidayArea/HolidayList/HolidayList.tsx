@@ -84,6 +84,8 @@ const HolidayList: FC<Props> = ({
               onEditHoliday={onEditHoliday}
               hideFollowButton={hideFollowButton}
               onDeleteHoliday={onDeleteHoliday}
+              isFollowed={holiday.isFollowed}
+              followerCount={holiday.followerCount}
             />
           </div>
         ))}

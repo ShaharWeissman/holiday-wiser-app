@@ -22,11 +22,11 @@ interface CardProps {
   hideFollowButton?: boolean;
   onEditHoliday: (id: number) => void;
   onDeleteHoliday: (id: number) => void;
+  isFollowed: boolean; // This prop is enough, no need for local state
+  followerCount: number;
 }
 
-// const Card: React.FC<CardProps> = ({  }) => {
 function Card(props: CardProps): JSX.Element {
-  const [isFollowed, setIsFollowed] = useState(false);
   const [userRole, setUserRole] = useState("");
   const user = localStorage.getItem("user");
 
@@ -36,8 +36,20 @@ function Card(props: CardProps): JSX.Element {
     console.log({ userRole });
   }, [userRole]);
 
-  const handleCheckboxChange = () => {
-    setIsFollowed(!isFollowed);
+  const handleCheckboxChange = async () => {
+    try {
+      // Make an API call to update the follow status on the server
+      const response = await fetch(`/api/follow/${props.id}`, {
+        method: props.isFollowed ? "DELETE" : "POST",
+      });
+
+      if (!response.ok) {
+        // Handle errors here
+        console.error("Failed to update follow status");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   const handleDeleteClick = () => {
@@ -67,18 +79,22 @@ function Card(props: CardProps): JSX.Element {
         <IconButton
           onClick={() => {
             props.onEditHoliday(props.id);
-          }}>
+          }}
+        >
           <EditIcon />
         </IconButton>
       )}
 
       {userRole === "user" && (
-        <Checkbox
-          checked={isFollowed}
-          onChange={handleCheckboxChange}
-          icon={<BookmarkBorderIcon />}
-          checkedIcon={<BookmarkIcon style={{ color: teal[500] }} />}
-        />
+        <div>
+          <Checkbox
+            checked={props.isFollowed}
+            onChange={handleCheckboxChange}
+            icon={<BookmarkBorderIcon />}
+            checkedIcon={<BookmarkIcon style={{ color: teal[500] }} />}
+          />
+          <span>Followers: {props.followerCount}</span>
+        </div>
       )}
     </div>
   );

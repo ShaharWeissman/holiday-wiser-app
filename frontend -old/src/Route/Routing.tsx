@@ -1,7 +1,6 @@
 // MainRoute.jsx
 import { Route, Routes, Navigate } from "react-router-dom";
 import Home from "../Components/HolidayArea/Home/Home";
-import HolidayInfo from "../Components/HolidayArea/HolidayInfo/HolidayInfo";
 import SignUp from "../Components/AuthArea/SignUp/SignUp";
 import HomeAdmin from "../Components/AdminArea/HomeAdmin/HomeAdmin";
 import AddHoliday from "../Components/AdminArea/AddHoliday/AddHoliday";

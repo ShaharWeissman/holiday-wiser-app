@@ -45,6 +45,8 @@ server.use("/api/auth/", authRouter);
 server.use("/api/holidays/", holidayRouter);
 server.use("/api/admin/", holidayRouter);
 server.use("/api/users/", userRouter);
+server.use("/api/users/", followerRouter);
+
 server.use("*", routeNotFound);
 
 server.use(catchAll);
