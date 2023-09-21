@@ -45,14 +45,7 @@ followerRouter.get(
       }
     }
   );
-  Step 4: Handling removeFollower Route
-  
-  Create a route that handles removeFollower requests. This route should accept a userId and holidayId and remove the follower for the specified user and holiday. If the follower is removed successfully, respond with a 200 status code; otherwise, respond with a 404 status code.
-  
-  Modify your code as follows:
-  
-  javascript
-  Copy code
+
   followerRouter.delete(
     "/removeFollower/:userId/:holidayId",
     async (request: Request, response: Response, next: NextFunction) => {
@@ -70,14 +63,7 @@ followerRouter.get(
       }
     }
   );
-  Step 5: Handling getFollowerCount Route
-  
-  Create a route that handles getFollowerCount requests. This route should accept a holidayId and return the follower count for the specified holiday.
-  
-  Modify your code as follows:
-  
-  javascript
-  Copy code
+
   followerRouter.get(
     "/getFollowerCount/:holidayId",
     async (request: Request, response: Response, next: NextFunction) => {
