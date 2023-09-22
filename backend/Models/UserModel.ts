@@ -8,9 +8,10 @@ class UserModel {
   public first_name: string;
   public last_name: string;
   public email: string;
-  public password: string;
+  public password?: string;
+  public role?: 'user' | 'admin';
 
-  constructor(user : UserModel) {
+  constructor(user: UserModel) {
     this.id = user.id;
     this.first_name = user.first_name;
     this.last_name = user.last_name;
@@ -30,8 +31,8 @@ class UserModel {
   // Validate properties and throw if not valid:
   public validate(): string {
     const result = UserModel.validationSchema.validate(this);
-    return result.error?.message;
-}
+    return result.error?.message as string;
+  }
 }
 
 export default UserModel;

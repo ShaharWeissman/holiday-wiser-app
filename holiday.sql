@@ -26,6 +26,7 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `follow`
 --
+use holiday;
 
 CREATE TABLE `follow` (
   `userId` int(11) NOT NULL,
@@ -78,7 +79,7 @@ CREATE TABLE `users` (
   `first_name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
+  `password` varchar(100) NOT NULL,
   `role` varchar(40) DEFAULT 'user'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
