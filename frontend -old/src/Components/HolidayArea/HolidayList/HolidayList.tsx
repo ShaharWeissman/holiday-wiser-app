@@ -1,4 +1,5 @@
-import { useEffect, useState, FC } from "react";
+// HolidayList.tsx
+import React, { useEffect, useState, FC } from "react";
 import "./HolidayList.css";
 import HolidayModel from "../../../Model/HolidayModel";
 import IconButton from "@mui/material";
@@ -30,38 +31,20 @@ const HolidayList: FC<Props> = ({
   );
 
   useEffect(() => {
-    //get holidays:
+    // Get holidays:
     holidaysService
       .getAllHolidays()
       .then((backendHolidays) => {
-        console.log("🚀 ~ file: HolidayList.tsx:37 ~ .then ~ backendHolidays:", backendHolidays)
-        
+        console.log(
+          "🚀 ~ file: HolidayList.tsx:37 ~ .then ~ backendHolidays:",
+          backendHolidays
+        );
+
         setFilteredHolidays(backendHolidays);
         setHolidays(backendHolidays);
       })
       .catch((err) => notifyService.error(err));
   }, []);
-
-  // useEffect(() => {
-  //   let filtered: HolidayModel[] = JSON.parse(JSON.stringify(holidays));
-  //   switch (filterHolidaysMode) {
-  //     case "all":
-  //       filtered = holidays;
-  //       break;
-  //     case "followed":
-  //       filtered = filteredHolidays.filter((holiday) => holiday);
-  //       break;
-  //     case "upcoming":
-  //       filtered = filteredHolidays.filter((holiday) => holiday);
-
-  //       break;
-  //     case "ongoing":
-  //       filtered = filteredHolidays.filter((holiday) => holiday);
-
-  //       break;
-  //       setFilteredHolidays(filtered);
-  //   }
-  // }, [filterHolidaysMode]);
 
   const handleClickedCard = (holiday: HolidayModel) => {
     onClickedCard?.(holiday);
@@ -84,8 +67,10 @@ const HolidayList: FC<Props> = ({
               onEditHoliday={onEditHoliday}
               hideFollowButton={hideFollowButton}
               onDeleteHoliday={onDeleteHoliday}
-              isFollowed={holiday.isFollowed}
-              followerCount={holiday.followerCount}
+              userRole={"user"} 
+              isFollowed={holiday.isFollowed || false} 
+              followerCount={holiday.followerCount || 0} 
+            
             />
           </div>
         ))}

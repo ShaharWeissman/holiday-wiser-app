@@ -9,6 +9,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { NavLink } from "react-router-dom";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import DeleteHoliday from "../../AdminArea/DeleteHoliday/DeleteHoliday";
+import indexConfig from "../../../Services/api/indexConfig";
 
 interface CardProps {
   onClick?: () => void;
@@ -20,38 +21,43 @@ interface CardProps {
   price: number;
   image_url: string;
   hideFollowButton?: boolean;
-  onEditHoliday: (id: number) => void;
   onDeleteHoliday: (id: number) => void;
-  isFollowed: boolean; // This prop is enough, no need for local state
+  onEditHoliday: (id: number) => void;
+  isFollowed: boolean;
   followerCount: number;
+  userRole: string; // Add a userRole prop
 }
 
 function Card(props: CardProps): JSX.Element {
-  const [userRole, setUserRole] = useState("");
-  const user = localStorage.getItem("user");
-
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    setUserRole(user);
-    console.log({ userRole });
-  }, [userRole]);
-
+  const [isFollowed, setIsFollowed] = useState(false);
+  const [followerCount, setFollowerCount] = useState(props.followerCount || 0);
+  
   const handleCheckboxChange = async () => {
     try {
+      // Toggle the follow status locally
+      setIsFollowed(!isFollowed);
+  
       // Make an API call to update the follow status on the server
-      const response = await fetch(`/api/follow/${props.id}`, {
-        method: props.isFollowed ? "DELETE" : "POST",
+      const response = await fetch(indexConfig.followApi + `/${props.id}`, {
+        method: isFollowed ? "DELETE" : "POST", // Use the follow API endpoint
       });
-
+  
       if (!response.ok) {
         // Handle errors here
         console.error("Failed to update follow status");
+        // You may want to revert the local state on error
+        setIsFollowed(!isFollowed);
+      } else {
+        // Update the follower count on success
+        const data = await response.json();
+        setFollowerCount(data.followerCount);
       }
     } catch (error) {
       console.error("Error:", error);
     }
   };
-
+  
+  
   const handleDeleteClick = () => {
     // Call the onDeleteHoliday prop to delete the specific card and holiday
     props.onDeleteHoliday(props.id);
@@ -75,7 +81,7 @@ function Card(props: CardProps): JSX.Element {
       </NavLink>
       <div className="card-price">Price: {+props.price} $</div>
 
-      {userRole === "admin" && (
+      {props.userRole === "admin" && ( // Render IconButton only for admin users
         <IconButton
           onClick={() => {
             props.onEditHoliday(props.id);
@@ -85,17 +91,15 @@ function Card(props: CardProps): JSX.Element {
         </IconButton>
       )}
 
-      {userRole === "user" && (
-        <div>
-          <Checkbox
-            checked={props.isFollowed}
-            onChange={handleCheckboxChange}
-            icon={<BookmarkBorderIcon />}
-            checkedIcon={<BookmarkIcon style={{ color: teal[500] }} />}
-          />
-          <span>Followers: {props.followerCount}</span>
-        </div>
-      )}
+      <div>
+        <Checkbox
+          checked={isFollowed}
+          onChange={handleCheckboxChange}
+          icon={<BookmarkBorderIcon />}
+          checkedIcon={<BookmarkIcon style={{ color: teal[500] }} />}
+        />
+        <span>Followers: {followerCount}</span>
+      </div>
     </div>
   );
 }
