@@ -14,6 +14,7 @@ import infoConsole from "./MiddleWare/info-console";
 import expressFileUpload from "express-fileupload";
 import userRouter from "./Routes/UserRouter";
 import catchAll from "./MiddleWare/catch-all";
+import followerRouter from "./Routes/FollowRouter";
 
 //create server
 const server = express();
@@ -45,7 +46,7 @@ server.use("/api/auth/", authRouter);
 server.use("/api/holidays/", holidayRouter);
 server.use("/api/admin/", holidayRouter);
 server.use("/api/users/", userRouter);
-server.use("/api/users/", followerRouter);
+server.use("/api/follower/", followerRouter);
 
 server.use("*", routeNotFound);
 
