@@ -34,8 +34,11 @@ const HolidayList: FC<Props> = ({
     holidaysService
       .getAllHolidays()
       .then((backendHolidays) => {
-        console.log("🚀 ~ file: HolidayList.tsx:37 ~ .then ~ backendHolidays:", backendHolidays)
-        
+        console.log(
+          "🚀 ~ file: HolidayList.tsx:37 ~ .then ~ backendHolidays:",
+          backendHolidays
+        );
+
         setFilteredHolidays(backendHolidays);
         setHolidays(backendHolidays);
       })
@@ -86,6 +89,14 @@ const HolidayList: FC<Props> = ({
               onDeleteHoliday={onDeleteHoliday}
               isFollowed={holiday.isFollowed}
               followerCount={holiday.followerCount}
+              onAddFollow={() => {
+                holiday.followerCount = holiday.followerCount + 1;
+                holiday.isFollowed = holiday.isFollowed === 0 ? 1 : 0;
+              }}
+              onRemoveFollow={() => {
+                holiday.followerCount = holiday.followerCount - 1;
+                holiday.isFollowed = holiday.isFollowed === 0 ? 1 : 0;
+              }}
             />
           </div>
         ))}

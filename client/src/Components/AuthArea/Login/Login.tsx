@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import notifyService from "../../../Services/NotifyService";
 import axios from "axios";
 import indexConfig from "../../../Services/api/indexConfig";
+import LocalStorageService from "../../../Services/localStorage.service";
 
 function Login(): JSX.Element {
   const navigate = useNavigate();
@@ -29,10 +30,11 @@ function Login(): JSX.Element {
       .post(indexConfig.loginUrl, credentials)
       .then((response) => {
         notifyService.success("you have been logged in");
-        const [role, token] = response.data.split(":");
+        const [role, token, id] = response.data.split(":");
         console.log({ r: response.data });
-        localStorage.setItem("user", role);
-        localStorage.setItem("token", token);
+        LocalStorageService.set("user", role);
+        LocalStorageService.set("token", token);
+        LocalStorageService.set("id", id);
         navigate(role === "admin" ? "/admin" : "/home");
         console.log(response);
       })

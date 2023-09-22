@@ -9,6 +9,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import { NavLink } from "react-router-dom";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import DeleteHoliday from "../../AdminArea/DeleteHoliday/DeleteHoliday";
+import LocalStorageService from "../../../Services/localStorage.service";
+import axiosInstance from "../../../Services/http.service";
 
 interface CardProps {
   onClick?: () => void;
@@ -22,31 +24,45 @@ interface CardProps {
   hideFollowButton?: boolean;
   onEditHoliday: (id: number) => void;
   onDeleteHoliday: (id: number) => void;
-  isFollowed: boolean; // This prop is enough, no need for local state
+  onAddFollow: () => void;
+  onRemoveFollow: () => void;
+  isFollowed: number;
   followerCount: number;
 }
 
 function Card(props: CardProps): JSX.Element {
   const [userRole, setUserRole] = useState("");
-  const user = localStorage.getItem("user");
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
+    const user = LocalStorageService.get("user");
     setUserRole(user);
     console.log({ userRole });
   }, [userRole]);
 
   const handleCheckboxChange = async () => {
     try {
+      if (props.isFollowed) {
+        const response = await axiosInstance.delete(
+          `/follow/{userId}/${props.id}`,
+          {}
+        );
+        if (response.data.removeFollower) {
+          props.onRemoveFollow();
+        }
+        return;
+      }
+
       // Make an API call to update the follow status on the server
-      const response = await fetch(`/api/follow/${props.id}`, {
-        method: props.isFollowed ? "DELETE" : "POST",
+      const response = await axiosInstance.post(`/follow/${props.id}`, {
+        userId: 1,
+        holidayId: props.id,
       });
 
-      if (!response.ok) {
+      if (!response.data) {
         // Handle errors here
         console.error("Failed to update follow status");
       }
+      props.onAddFollow();
     } catch (error) {
       console.error("Error:", error);
     }
@@ -79,8 +95,7 @@ function Card(props: CardProps): JSX.Element {
         <IconButton
           onClick={() => {
             props.onEditHoliday(props.id);
-          }}
-        >
+          }}>
           <EditIcon />
         </IconButton>
       )}
@@ -88,7 +103,7 @@ function Card(props: CardProps): JSX.Element {
       {userRole === "user" && (
         <div>
           <Checkbox
-            checked={props.isFollowed}
+            checked={props.isFollowed ? true : false}
             onChange={handleCheckboxChange}
             icon={<BookmarkBorderIcon />}
             checkedIcon={<BookmarkIcon style={{ color: teal[500] }} />}

@@ -5,6 +5,7 @@ import axios from "axios";
 import notifyService from "../../../Services/NotifyService";
 import UserModel from "../../../Model/UserModel";
 import authService from "../../../Services/AuthService";
+import LocalStorageService from "../../../Services/localStorage.service";
 
 function SignUp(): JSX.Element {
   //register the inputs

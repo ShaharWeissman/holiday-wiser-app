@@ -7,7 +7,7 @@ class HolidayModel {
     public price: number;
     public image_url: string; // Image url serving the uploaded image.
     public image: File; // Image file to upload to backend.
-    isFollowed: boolean;
+    isFollowed: number;
     followerCount: number;
   }
   

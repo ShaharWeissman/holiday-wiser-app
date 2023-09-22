@@ -10,8 +10,6 @@ import unLoggedInBlocker from "../MiddleWare/non-user-block";
 
 const holidayRouter = express.Router();
 
-
-
 // ===============Get All Holidays Router===============
 holidayRouter.get(
   "/getAllHolidays",
@@ -42,8 +40,6 @@ holidayRouter.get("/:id",unLoggedInBlocker, async (request: Request, response: R
     next(err);
   }
 });
-
-
 
 // ===============Add Holiday Router===============
 holidayRouter.post(
