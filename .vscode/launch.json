@@ -10,7 +10,6 @@
       "cwd": "${workspaceFolder}/server",
       "skipFiles": ["<node_internals>/**"],
       "runtimeArgs": ["-r", "ts-node/register/transpile-only", "-r", "tsconfig-paths/register"],
-
       "console": "integratedTerminal"
     },
     {

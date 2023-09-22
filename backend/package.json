@@ -32,6 +32,9 @@
     "@types/morgan": "^1.9.4",
     "@types/mysql": "^2.15.21",
     "@types/socket.io": "^3.0.2",
-    "@types/uuid": "^9.0.2"
+    "@types/uuid": "^9.0.2",
+    "cd": "^0.3.3",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0"
   }
 }
