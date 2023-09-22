@@ -9,8 +9,35 @@ import { useEffect, useState } from "react";
 import HolidayModel from "../../../Model/HolidayModel";
 import holidaysService from "../../../Services/AdminService";
 import adminService from "../../../Services/AdminService";
-import {  useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+
+function stringToDate(dateString: string) {
+  const dateParts = dateString.split("-");
+  if (dateParts.length !== 3) {
+    throw new Error("Invalid date format");
+  }
+
+  const day = parseInt(dateParts[0]);
+  const month = parseInt(dateParts[1]) - 1; // Months are 0-indexed in JavaScript
+  const year = parseInt(dateParts[2]);
+
+  const date = new Date(year, month, day);
+
+  if (isNaN(date.getTime())) {
+    throw new Error("Invalid date");
+  }
+
+  return date;
+}
+
+function formatDateToYYYYMMDD(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed, so we add 1 and pad with '0' if necessary
+  const day = String(date.getDate()).padStart(2, "0"); // Pad with '0' if the day is a single digit
+
+  return `${year}-${month}-${day}`;
+}
 
 function EditHoliday(): JSX.Element {
   useTitle("HolidayApp | edit-holiday");
@@ -25,6 +52,21 @@ function EditHoliday(): JSX.Element {
     holidaysService
       .getHolidayById(id)
       .then((backendHolidays) => {
+        console.log(
+          "🚀 ~ file: EditHoliday.tsx:28 ~ .then ~ backendHolidays:",
+          { ...backendHolidays }
+        );
+        backendHolidays.start_date = formatDateToYYYYMMDD(
+          stringToDate(backendHolidays.start_date as unknown as string)
+        ) as undefined;
+        backendHolidays.end_date = formatDateToYYYYMMDD(
+          stringToDate(backendHolidays.end_date as unknown as string)
+        ) as undefined;
+        console.log(
+          "🚀 ~ file: EditHoliday.tsx:28 ~ .then ~ backendHolidays:",
+          backendHolidays
+        );
+
         setValue("destination", backendHolidays.destination);
         setValue("description", backendHolidays.description);
         setValue("price", backendHolidays.price);
@@ -130,6 +172,7 @@ function EditHoliday(): JSX.Element {
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                defaultValue={new Date()}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -144,6 +187,7 @@ function EditHoliday(): JSX.Element {
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                defaultValue={new Date()}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -170,9 +214,9 @@ function EditHoliday(): JSX.Element {
                 }}>
                 <img
                   src={currentImage}
-                  alt="Current Image"
+                  alt={"holiday name"}
                   style={{ width: "200px", height: "130px" }}
-                />{" "}
+                />
                 <input
                   type="file"
                   accept="image/*"

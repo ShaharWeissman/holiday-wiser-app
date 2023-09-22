@@ -5,12 +5,43 @@
       "type": "node",
       "request": "launch",
       "name": "Run Server",
-      "args": ["server.ts"],
+      "args": ["src/main.ts"],
       "runtimeExecutable": "nodemon",
-      "cwd": "${workspaceFolder}/backend",
+      "cwd": "${workspaceFolder}/server",
       "skipFiles": ["<node_internals>/**"],
       "runtimeArgs": ["-r", "ts-node/register/transpile-only", "-r", "tsconfig-paths/register"],
-
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run Tests Windows",
+      "program": "${workspaceFolder}/server/node_modules/jest-cli/bin/jest.js",
+      "args": [
+        "--runInBand",
+        "--config",
+        "jest.config.js"
+      ],
+      "cwd": "${workspaceFolder}/server",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "console": "integratedTerminal"
+    },    
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run Tests",
+      "program": "${workspaceFolder}/server/node_modules/.bin/jest",
+      "args": [
+        "--runInBand",
+        "--config",
+        "jest.config.js"
+      ],
+      "cwd": "${workspaceFolder}/server",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "console": "integratedTerminal"
     }
   ]

@@ -1,4 +1,3 @@
-import getHolidayById from "../../frontend/src/Services/api/indexConfig";
 import express, { NextFunction, Request, Response } from "express";
 import Holiday from "../Models/HolidayModel";
 import holidayLogic from "../Logic/HolidayLogic";

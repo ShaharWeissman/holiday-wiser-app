@@ -94,13 +94,13 @@ main design of the app:
       - logout
     - state
       - user (`id,role,....`)
-- Holidays
+- Holidays:
     - Mutations
       - getAll
       - toggleFollow(`user.id,holiday[0].id`)
     - state 
       - (holidays)
-- Admin
+- Admin:
     - Mutations/Actions
       - login
       - signup
@@ -113,20 +113,20 @@ main design of the app:
 
 # Routing
 
-## Admin
+## Admin:
  - Dashboard
     - Add
     - Edit
     - Report
       (Graph,download csv)
-## User
+## User:
  - Main ('/')
 ## Auth
  - Login
  - Signup
 
 
-## TEMP
+## TEMP:
 
 ```tsx
 type InputState = {value:any,type:'text'|'number'|'hidden'}

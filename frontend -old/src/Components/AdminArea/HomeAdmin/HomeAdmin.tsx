@@ -21,7 +21,8 @@ function HomeAdmin(): JSX.Element {
     // Toggle the state to show the delete icons
 
     // Call the deleteHoliday function from your adminService with the given ID
-    adminService.deleteHoliday(id)
+    adminService
+      .deleteHoliday(id)
       .then(() => {
         // Handle any additional actions after successful deletion (e.g., updating the UI)
       })
@@ -31,7 +32,6 @@ function HomeAdmin(): JSX.Element {
       });
   };
 
-
   return (
     <>
       <MenuAdmin />
@@ -40,7 +40,14 @@ function HomeAdmin(): JSX.Element {
           onClickedCard={handleHolidayCardClick}
           hideFollowButton={true}
           onDeleteHoliday={handleDeleteHoliday}
+          onEditHoliday={(id) => {
+            console.log(
+              "🚀 ~ file: HomeAdmin.tsx:44 ~ HomeAdmin ~ holidayId:",
+              id
+            );
 
+            navigate(`/admin/edit-holiday/${id}`);
+          }}
         />
       </div>
     </>
