@@ -59,7 +59,7 @@ export function holidaysReducer(
       if (indexForDelete >= 0) newState.holidays.splice(indexForDelete, 1);
 
       // newState.holidays.filter((h) => h.id === action.payload.id);
-      // localStorage.setItem("holidays", JSON.stringify(newState.holidays));
+      // LocalStorageService.set("holidays", JSON.stringify(newState.holidays));
       break;
 
     default:

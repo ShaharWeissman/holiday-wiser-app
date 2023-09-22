@@ -15,13 +15,13 @@ const getAllHolidays = async (userId: string) => {
       DATE_FORMAT(h.start_date, '%Y-%m-%d') AS start_date,
       DATE_FORMAT(h.end_date, '%Y-%m-%d') AS end_date,
       h.price AS price,
-      CONCAT('${config.domainName}/api/holidays/', h.image_name) AS image_url,
-      COUNT(f.userId) AS followCount,
+      CONCAT('${config.domainName}/Assets/images/', h.image_name) AS image_url,
+      COUNT(f.userId) AS followerCount,
       CASE 
         WHEN EXISTS (SELECT 1 FROM follow f2 WHERE f2.holidayId = h.id AND f2.userId = ${userId}) 
         THEN true 
         ELSE false 
-      END AS isFollowing
+      END AS isFollowed
     FROM holidays h
     LEFT JOIN follow f ON h.id = f.holidayId
     GROUP BY h.id, h.destination, h.description, h.start_date, h.end_date, h.price, h.image_name;`;
@@ -35,9 +35,9 @@ const getAllHolidays = async (userId: string) => {
 // ===============Get A Holiday By ID ===============
 
 const getHolidayById = async (
-  id: number,
+  holidayId: number,
   userId: string
-): Promise<HolidayModel & { followCount: number; isFollowing: boolean }> => {
+): Promise<HolidayModel & { followerCount: number; isFollowed: boolean }> => {
   const sqlCommand = `
     SELECT 
       h.id AS id,
@@ -47,11 +47,11 @@ const getHolidayById = async (
       DATE_FORMAT(h.end_date, '%d-%m-%Y') AS end_date, 
       h.price AS price,
       h.image_name,
-      COUNT(f.userId) AS followCount,
-      CASE WHEN EXISTS (SELECT 1 FROM follow WHERE holidayId = ${id} AND userId = ${userId}) THEN TRUE ELSE FALSE END AS isFollowing
+      COUNT(f.userId) AS followerCount,
+      CASE WHEN EXISTS (SELECT 1 FROM follow WHERE holidayId = ${holidayId} AND userId = ${userId}) THEN TRUE ELSE FALSE END AS isFollowed
     FROM holidays h
     LEFT JOIN follow f ON h.id = f.holidayId
-    WHERE h.id = ${id};
+    WHERE h.id = ${holidayId};
   `;
 
   // Take the holiday from the database that contains one holiday - it returns an array:
@@ -61,7 +61,7 @@ const getHolidayById = async (
   const holiday = holidays[0];
 
   // In case the holiday does not exist
-  if (!holiday.id) throw new ResourceNotFoundError(id);
+  if (!holiday.id) throw new ResourceNotFoundError(holidayId);
 
   holiday.image_url = `${config.domainName}/assets/images/${holiday.image_name}`;
   return holiday;

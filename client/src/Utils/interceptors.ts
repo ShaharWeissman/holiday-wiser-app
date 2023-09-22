@@ -1,11 +1,12 @@
 import axios from "axios";
 import { authStore } from "../Redux/AuthState";
+import axiosInstance from "../Services/http.service";
 
 
 class Interceptors {
   public create(): void {
     // Set up request interceptor
-    axios.interceptors.request.use((requestObject) => {
+    axiosInstance.interceptors.request.use((requestObject) => {
       console.log("Interceptor triggered"); 
       // Note: requestObject has all the info that is sent in the request
       if (authStore.getState().token) {

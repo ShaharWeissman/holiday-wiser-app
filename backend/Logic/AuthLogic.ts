@@ -19,15 +19,16 @@ async function signup(user: UserModel): Promise<string> {
   if (await isEmailTaken(user.email)) {
     throw new ValidationError(`Email: ${user.email} is already taken`);
   }
-  user.password = await cyber.hashPassword(user.password!) as string;
+  user.password = (await cyber.hashPassword(user.password!)) as string;
   // SQL command for  user
   const sqlCommand = `INSERT INTO users (first_name, last_name, email, password)
     VALUES ('${user.first_name}', '${user.last_name}', '${user.email}', '${user.password}')`;
   const info: OkPacket = await dal_mysql.execute(sqlCommand);
   user.id = info.insertId;
+  user.role = "user";
   const token = cyber.getNewToken(user);
 
-  return `${user.role}:${token}`;
+  return user.role + ":" + token + ":" + user.id;
 }
 
 // ===============Function For Checking Email Exist===============
@@ -45,13 +46,13 @@ async function login(credentials: CredentialsModel): Promise<string> {
 
   const sqlCommand = `SELECT * FROM users WHERE email = "${credentials.email}"`; // execution
 
-  const users:UserModel[] = await dal_mysql.execute(sqlCommand);
+  const users: UserModel[] = await dal_mysql.execute(sqlCommand);
   const user = users[0];
   if (!cyber.comparePassword(credentials.password, user.password!)) {
     throw new Error("user not authenticated");
   }
   const token = cyber.getNewToken(user);
-  return user.role + ":" + token;
+  return user.role + ":" + token + ":" + user.id;
 }
 
 // ===============Get User By ID===============
