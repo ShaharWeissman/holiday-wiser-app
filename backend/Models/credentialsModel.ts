@@ -19,7 +19,7 @@ class CredentialsModel {
   // Validate properties and throw if not valid:
   public validate(): string {
     const result = CredentialsModel.validationSchema.validate(this);
-    return result.error?.message;
+    return result.error?.message as string;
 }
 }
 

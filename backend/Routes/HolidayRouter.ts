@@ -6,6 +6,7 @@ import StatusCode from "../Models/status-code";
 import path from "path";
 import HolidayModel from "../Models/HolidayModel";
 import HolidayLogic from "../Logic/HolidayLogic";
+import unLoggedInBlocker from "../MiddleWare/non-user-block";
 
 const holidayRouter = express.Router();
 
@@ -14,23 +15,26 @@ const holidayRouter = express.Router();
 // ===============Get All Holidays Router===============
 holidayRouter.get(
   "/getAllHolidays",
-  async (request: Request, response: Response, next: NextFunction) => {
-    const holidayList = await holidayLogic.getAllHolidays();
+  unLoggedInBlocker,
+  async (request: Request, response: Response) => {
+    const userId = (request as any).user.id;
+    if(!userId) throw new Error("User ID is missing");
+    const holidayList = await holidayLogic.getAllHolidays(userId);
     return response.status(200).json(holidayList);
   }
 );
 
 // ===============Get Holiday By ID Router===============
-holidayRouter.get("/:id([0-9]+)?/user", async (request: Request, response: Response, next: NextFunction) => {
+holidayRouter.get("/:id",unLoggedInBlocker, async (request: Request, response: Response, next: NextFunction) => {
   try {
     // Get route id:
     const id = +request.params.id;
 
     // Get userId from query parameters:
-    const userId = request.query.userId as string; // Assuming userId is a string
+    const userId = request.user?.id.toString(); // Assuming userId is a string
 
     // Use id and userId as needed, for example:
-    const holiday = await HolidayLogic.getHolidayById(id, userId);
+    const holiday = await HolidayLogic.getHolidayById(id, userId!);
 
     // Respond with the desired product:
     response.json(holiday);
@@ -94,26 +98,26 @@ holidayRouter.put(
 
 // ===============Handling IMAGES Router===============
 
-holidayRouter.get(
-  "/:imageName",
-  async (request: Request, response: Response, next: NextFunction) => {
-    try {
-      //get the image name
-      const imageName = request.params.imageName;
+// holidayRouter.get(
+//   "/:imageName",
+//   async (request: Request, response: Response, next: NextFunction) => {
+//     try {
+//       //get the image name
+//       const imageName = request.params.imageName;
 
-      //get img path on computer:
-      const absolutePath = path.join(
-        __dirname,
-        "..",
-        "Assets",
-        "Images",
-        imageName
-      );
-      //the response = the image file
-      response.sendFile(absolutePath);
-    }
-    catch (err: any) {
-        next(err);
-    }
-});
+//       //get img path on computer:
+//       const absolutePath = path.join(
+//         __dirname,
+//         "..",
+//         "Assets",
+//         "Images",
+//         imageName
+//       );
+//       //the response = the image file
+//       response.sendFile(absolutePath);
+//     }
+//     catch (err: any) {
+//         next(err);
+//     }
+// });
 export default holidayRouter;
