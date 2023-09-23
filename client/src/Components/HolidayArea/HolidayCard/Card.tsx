@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Card.css";
 import { teal } from "@mui/material/colors";
 import { Checkbox, IconButton } from "@mui/material";
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -36,40 +37,57 @@ function Card(props: CardProps): JSX.Element {
   useEffect(() => {
     const user = LocalStorageService.get("user");
     setUserRole(user);
-    console.log({ userRole });
   }, [userRole]);
+  if (props.id === 2) {
+    console.log(props)
+  }
 
   const handleCheckboxChange = async () => {
     try {
+      const userId = LocalStorageService.get("id");
+      // debugger;
       if (props.isFollowed) {
         const response = await axiosInstance.delete(
-          `/follow/{userId}/${props.id}`,
+          `/follower/${userId}/${props.id}`,
           {}
         );
-        if (response.data.removeFollower) {
-          props.onRemoveFollow();
+        console.log("🚀 ~ file: Card.tsx:50 ~ handleCheckboxChange ~ response:", response.data)
+        if (!response.data.removeFollower) {
+          console.error("Failed to update follow status");
+          return;
         }
+        props.onRemoveFollow();
         return;
       }
 
       // Make an API call to update the follow status on the server
-      const response = await axiosInstance.post(`/follow/${props.id}`, {
-        userId: 1,
+      const response = await axiosInstance.post(`/follower`, {
+        userId,
         holidayId: props.id,
       });
 
-      if (!response.data) {
+      if (!response.data.addFollow) {
         // Handle errors here
         console.error("Failed to update follow status");
       }
+      console.log("🚀 ~ file: Card.tsx:60 ~ handleCheckboxChange ~ response:", response.data)
       props.onAddFollow();
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const handleDeleteClick = () => {
-    // Call the onDeleteHoliday prop to delete the specific card and holiday
+  const handleDeleteClick = async () => {
+
+    const response = await axiosInstance.delete(
+      `/holidays/deleteHoliday/${props.id}`,
+      {}
+    );
+    console.log("🚀 ~ file: Card.tsx:85 ~ handleDeleteClick ~ response:", response)
+    if (response.status !== 204) {
+      console.error("Failed to delete holiday");
+      return;
+    }
     props.onDeleteHoliday(props.id);
   };
 
@@ -92,12 +110,30 @@ function Card(props: CardProps): JSX.Element {
       <div className="card-price">Price: {+props.price} $</div>
 
       {userRole === "admin" && (
-        <IconButton
-          onClick={() => {
-            props.onEditHoliday(props.id);
-          }}>
-          <EditIcon />
-        </IconButton>
+        <div style={{ display: "flex" }}>
+          <div>
+            <IconButton
+              onClick={() => {
+                props.onEditHoliday(props.id);
+              }}
+            >
+              <EditIcon
+              />
+            </IconButton>
+          </div>
+          <div
+            onClick={(e) => { e.stopPropagation() }}
+          >
+            <IconButton
+              onClick={handleDeleteClick}
+            >
+              <RemoveCircleIcon
+                sx={{ color: "red" }}
+              />
+            </IconButton>
+          </div>
+        </div>
+
       )}
 
       {userRole === "user" && (

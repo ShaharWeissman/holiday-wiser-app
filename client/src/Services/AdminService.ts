@@ -54,7 +54,7 @@ class AdminService {
       headers: { "Content-Type": "multipart/form-data" }, //the file include in request
     };
     //send holiday to backend
-    const response = await axiosInstance.post("/addHoliday", holiday, options);
+    const response = await axiosInstance.post("/holidays/addHoliday", holiday, options);
 
     //take the added holiday send back from backend
     const addedHoliday = response.data as HolidayModel;

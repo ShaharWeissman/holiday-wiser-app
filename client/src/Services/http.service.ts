@@ -8,38 +8,42 @@ const BASE_URL = "http://localhost:4000/api/";
 // const DOMAIN = "http://localhost:4000";
 
 const axiosInstance = axios.create({
-  baseURL: BASE_URL,
+    baseURL: BASE_URL,
 });
 
 const TOKEN_LS_KEY = "token";
 // const ROLE_LS_KEY = "role";
 
 axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const token = LocalStorageService.get(TOKEN_LS_KEY);
-  console.log(
-    "🚀 ~ file: HttpService.ts:19 ~ axiosInstance.interceptors.request.use ~ requestUrl",
-    config.url
-  );
+    const token = LocalStorageService.get(TOKEN_LS_KEY);
 
-  if (token) {
-    (config.headers as any)["Authorization"] = `Bearer ${token}`;
-  }
+    // Log the request URL, method, and body (if available)
+    console.log(
+        "🚀 ~ Request URL:", config.url,
+        "\n🚀 ~ Request Method:", config.method,
+        "\n🚀 ~ Request Body:", config.data ? config.data : "No body"
+    );
 
-  return config;
+    if (token) {
+        (config.headers as any)["Authorization"] = `Bearer ${token}`;
+    }
+
+    return config;
 });
+
 /*
 axiosInstance.interceptors.response.use(
-  (response) => {
+(response) => {
     return response;
-  },
-  (error) => {
+},
+(error) => {
     console.log("🚀 ~ file: HttpService.ts:39 ~ error:", error);
     if (error.response.status === 401) {
-      // dispatch the logout action
-      store.dispatch(logout());
+    // dispatch the logout action
+    store.dispatch(logout());
     }
     return Promise.reject(error);
-  }
+}
 );
 */
 export default axiosInstance;
