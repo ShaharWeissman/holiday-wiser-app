@@ -39,7 +39,7 @@ class AdminService {
 
     //if the holiday not found
     if (!holiday) {
-      const response = await axiosInstance.get(`/${id}`);
+      const response = await axiosInstance.get(`/holidays/${id}`);
 
       holiday = response.data as HolidayModel;
     }
@@ -77,7 +77,7 @@ class AdminService {
     };
     //send holiday to backend
     const response = await axiosInstance.put(
-    "/editHoliday/" + holiday.id,
+    "/holidays/editHoliday/" + holiday.id,
       holiday,
       options
     );

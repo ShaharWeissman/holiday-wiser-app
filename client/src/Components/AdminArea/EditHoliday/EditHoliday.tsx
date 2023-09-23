@@ -5,7 +5,7 @@ import useTitle from "../../../Services/useTitle";
 import { NavLink, useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import HolidayModel from "../../../Model/HolidayModel";
 import holidaysService from "../../../Services/AdminService";
 import adminService from "../../../Services/AdminService";
@@ -45,45 +45,49 @@ function EditHoliday(): JSX.Element {
   const params = useParams();
   const { handleSubmit, register, setValue } = useForm<HolidayModel>();
   const [currentImage, setCurrentImage] = useState<string | null>(null); // Define the state variable for the current image URL
+  const fileInputRef = useRef<HTMLInputElement | null>(null); // Create a ref for the file input
 
   const id = +params.id;
 
   useEffect(() => {
     holidaysService
       .getHolidayById(id)
-      .then((backendHolidays) => {
+      .then((holiday) => {
         console.log(
           "🚀 ~ file: EditHoliday.tsx:28 ~ .then ~ backendHolidays:",
-          { ...backendHolidays }
+          { ...holiday }
         );
-        backendHolidays.start_date = formatDateToYYYYMMDD(
-          stringToDate(backendHolidays.start_date as unknown as string)
+        holiday.start_date = formatDateToYYYYMMDD(
+          stringToDate(holiday.start_date as unknown as string)
         ) as undefined;
-        backendHolidays.end_date = formatDateToYYYYMMDD(
-          stringToDate(backendHolidays.end_date as unknown as string)
+        holiday.end_date = formatDateToYYYYMMDD(
+          stringToDate(holiday.end_date as unknown as string)
         ) as undefined;
         console.log(
           "🚀 ~ file: EditHoliday.tsx:28 ~ .then ~ backendHolidays:",
-          backendHolidays
+          holiday
         );
 
-        setValue("destination", backendHolidays.destination);
-        setValue("description", backendHolidays.description);
-        setValue("price", backendHolidays.price);
-        setValue("image", backendHolidays.image);
-        setValue("start_date", backendHolidays.start_date);
-        setValue("end_date", backendHolidays.end_date);
+        setValue("destination", holiday.destination);
+        setValue("description", holiday.description);
+        setValue("price", holiday.price);
+        setValue("image", holiday.image);
+        setValue("start_date", holiday.start_date);
+        setValue("end_date", holiday.end_date);
 
-        setCurrentImage(backendHolidays.image_url);
+        setCurrentImage(holiday.image_url);
       })
       .catch((err) => console.log(err.message));
   }, []);
 
   async function sendHoliday(holiday: HolidayModel) {
     try {
+      console.log(holiday, fileInputRef.current.files);
       holiday.id = id;
-      holiday.image = (holiday.image as unknown as FileList)[0];
-      console.log(holiday);
+      holiday.image =fileInputRef.current.files[0];
+      // holiday.image = (holiday.image as unknown as FileList)[0];
+
+      // setValue("image", currentImage as any);
       await adminService.editHoliday(holiday);
       console.log("holiday was edited successfully");
       navigate("/admin/");
@@ -92,17 +96,22 @@ function EditHoliday(): JSX.Element {
     }
   }
 
-  async function deleteMe(): Promise<void> {
-    try {
-      const ok = window.confirm("are you sure you want to delete?");
-      if (!ok) return;
-      await adminService.deleteHoliday(id);
-      console.log("holiday has been deleted");
-    } catch (err: any) {
-      console.log(err.message);
+  const handleImageChange = () => {
+    console.log("Image changed");
+    if (fileInputRef.current?.files && fileInputRef.current?.files[0]) {
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        if (e.target) {
+          setCurrentImage(e.target.result as string);
+          console.log(e.target.result, fileInputRef.current.files[0]);
+          // Update the form value using React Hook Form's setValue
+          setValue("image", e.target.result as any);
+        }
+      };
+      reader.readAsDataURL(fileInputRef.current.files[0]);
     }
-    console.log("delete id " + id);
-  }
+  };
 
   return (
     <div>
@@ -218,11 +227,17 @@ function EditHoliday(): JSX.Element {
                   style={{ width: "200px", height: "130px" }}
                 />
                 <input
+                  onChange={handleImageChange}
+                  name="image"
+                  ref={(e) => {
+                    register("image"); // Register the input element with React Hook Form
+                    fileInputRef.current = e; // Store a reference to the input element
+                  }}
                   type="file"
                   accept="image/*"
                   style={{ display: "none" }}
                   id="uploadInput"
-                  {...register("image")}
+                  // {...register("image")}
                 />
                 <label
                   htmlFor="uploadInput"

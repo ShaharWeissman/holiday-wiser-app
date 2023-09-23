@@ -1,50 +1,99 @@
-import React, { useState } from "react";
-import {Chart} from "react-chartjs-2";
-import useTitle from "../../../Services/useTitle";
+import React, { useEffect, useState } from "react";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+import notifyService from "../../../Services/NotifyService";
+import holidaysService from "../../../Services/HolidaysService";
+import HolidayModel from "../../../Model/HolidayModel";
 
-function HolidaysReport(): JSX.Element {
-    useTitle("HolidayApp | holiday-report");
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-    // Sample data (replace with your actual data)
-    const holidaysData = {
-      labels: ["Holiday 1", "Holiday 2", "Holiday 3", "Holiday 4", "Holiday 5"],
-      datasets: [
-        {
-          label: "Number of Followers",
-          data: [100, 200, 150, 300, 250], // Replace with your follower counts
-          backgroundColor: "rgba(75, 192, 192, 0.6)",
-          borderColor: "rgba(75, 192, 192, 1)",
-          borderWidth: 1,
-        },
-      ],
-    };
-  
-    const options = {
-      scales: {
-        y: {
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: "Number of Followers",
-          },
-        },
-        x: {
-          title: {
-            display: true,
-            text: "Holidays",
-          },
-        },
-      },
-    };
-  
-    return (
-      <div>
-        <h1>Holidays Report</h1>
-        <div style={{ height: "400px", width: "600px" }}>
-          <Chart type="bar" data={holidaysData} options={options} />
-        </div>
-      </div>
+export const options = {
+  // responsive: true,
+  plugins: {
+    legend: {
+      position: "top" as const,
+    },
+    title: {
+      display: true,
+      text: "Holidays",
+    },
+  },
+};
+
+let data = {
+  labels: [""],
+  datasets: [
+    {
+      label: "Dataset 1",
+      data: [""],
+      backgroundColor: "rgba(39, 22, 92, 0.5)",
+    },
+  ],
+};
+
+export default function HolidaysReport() {
+  const [holidays, setHolidays] = useState<HolidayModel[]>([]);
+  const [graphData, setGraphData] = useState(data);
+
+  // Function to convert data to CSV format
+  const convertToCSV = () => {
+    const header = "Destination,Follower Count\n";
+    const csvData = holidays.map((holiday) =>
+      `${holiday.destination},${holiday.followerCount}`
     );
-  }
-  
-export default HolidaysReport;
+    return header + csvData.join("\n");
+  };
+
+  // Function to trigger CSV download
+  const downloadCSV = () => {
+    const csv = convertToCSV();
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    a.download = "holidays.csv";
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  useEffect(() => {
+    // Get holidays:
+    holidaysService
+      .getAllHolidays()
+      .then((backendHolidays) => {
+        setHolidays(backendHolidays);
+      })
+      .catch((err) => notifyService.error(err));
+  }, []);
+
+  useEffect(() => {
+    const data = JSON.parse(JSON.stringify(graphData));
+    data.labels = holidays.map((holiday) => holiday.destination);
+    data.datasets[0].data = holidays.map((holiday) => holiday.followerCount);
+    setGraphData(data);
+  }, [holidays]);
+
+  return (
+    <div style={{ width: "1500px", height: "1500px" }}>
+      <Bar options={options} data={graphData} />
+      <button onClick={downloadCSV}>Download CSV</button>
+    </div>
+  );
+}
