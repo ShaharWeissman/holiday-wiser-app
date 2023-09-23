@@ -54,26 +54,28 @@ const HolidayList: FC<Props> = ({
       .catch((err) => notifyService.error(err));
   }, []);
 
-  // useEffect(() => {
-  //   let filtered: HolidayModel[] = JSON.parse(JSON.stringify(holidays));
-  //   switch (filterHolidaysMode) {
-  //     case "all":
-  //       filtered = holidays;
-  //       break;
-  //     case "followed":
-  //       filtered = filteredHolidays.filter((holiday) => holiday);
-  //       break;
-  //     case "upcoming":
-  //       filtered = filteredHolidays.filter((holiday) => holiday);
+  useEffect(() => {
+    let filtered: HolidayModel[] = JSON.parse(JSON.stringify(holidays));
+    const holidaysPreFiltered = [...holidays];
 
-  //       break;
-  //     case "ongoing":
-  //       filtered = filteredHolidays.filter((holiday) => holiday);
+    switch (filterHolidaysMode) {
+      case "all":
+        filtered = holidays;
+        break;
+      case "followed":
+        filtered = holidaysPreFiltered.filter((holiday) => holiday.isFollowed);
+        break;
+      case "upcoming":
+        filtered = holidaysPreFiltered.filter((holiday) => new Date(holiday.start_date) > new Date());
 
-  //       break;
-  //       setFilteredHolidays(filtered);
-  //   }
-  // }, [filterHolidaysMode]);
+        break;
+      case "ongoing":
+        filtered = holidaysPreFiltered.filter((holiday) => new Date(holiday.start_date) < new Date() && new Date(holiday.end_date) > new Date());
+
+        break;
+    }
+    setFilteredHolidays(filtered);
+  }, [filterHolidaysMode]);
 
   const handleClickedCard = (holiday: HolidayModel) => {
     onClickedCard?.(holiday);
