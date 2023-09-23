@@ -98,7 +98,7 @@ const HolidayList: FC<Props> = ({
 
   return (
     <div className="container">
-      
+
       <div className="pagination-controls">
         <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
           Previous
@@ -124,7 +124,14 @@ const HolidayList: FC<Props> = ({
                 image_url={holiday.image_url}
                 onEditHoliday={onEditHoliday}
                 hideFollowButton={hideFollowButton}
-                onDeleteHoliday={onDeleteHoliday}
+                onDeleteHoliday={() => {
+                  const holidaysPreRemoveOne = [...holidays];
+                  const index = holidaysPreRemoveOne.findIndex(h => h.id === holiday.id);
+                  holidaysPreRemoveOne.splice(index, 1);
+                  setHolidays(holidaysPreRemoveOne);
+                  setFilteredHolidays(holidays);
+                  setCurrentPage(1);
+                }}
                 isFollowed={holiday.isFollowed}
                 followerCount={holiday.followerCount}
                 onAddFollow={() => {

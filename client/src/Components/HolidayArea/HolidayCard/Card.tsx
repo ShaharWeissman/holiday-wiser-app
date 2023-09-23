@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Card.css";
 import { teal } from "@mui/material/colors";
 import { Checkbox, IconButton } from "@mui/material";
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -64,7 +65,7 @@ function Card(props: CardProps): JSX.Element {
         userId,
         holidayId: props.id,
       });
-      
+
       if (!response.data.addFollow) {
         // Handle errors here
         console.error("Failed to update follow status");
@@ -76,8 +77,17 @@ function Card(props: CardProps): JSX.Element {
     }
   };
 
-  const handleDeleteClick = () => {
-    // Call the onDeleteHoliday prop to delete the specific card and holiday
+  const handleDeleteClick = async () => {
+
+    const response = await axiosInstance.delete(
+      `/holidays/deleteHoliday/${props.id}`,
+      {}
+    );
+    console.log("🚀 ~ file: Card.tsx:85 ~ handleDeleteClick ~ response:", response)
+    if (response.status !== 204) {
+      console.error("Failed to delete holiday");
+      return;
+    }
     props.onDeleteHoliday(props.id);
   };
 
@@ -100,12 +110,30 @@ function Card(props: CardProps): JSX.Element {
       <div className="card-price">Price: {+props.price} $</div>
 
       {userRole === "admin" && (
-        <IconButton
-          onClick={() => {
-            props.onEditHoliday(props.id);
-          }}>
-          <EditIcon />
-        </IconButton>
+        <div style={{ display: "flex" }}>
+          <div>
+            <IconButton
+              onClick={() => {
+                props.onEditHoliday(props.id);
+              }}
+            >
+              <EditIcon
+              />
+            </IconButton>
+          </div>
+          <div
+            onClick={(e) => { e.stopPropagation() }}
+          >
+            <IconButton
+              onClick={handleDeleteClick}
+            >
+              <RemoveCircleIcon
+                sx={{ color: "red" }}
+              />
+            </IconButton>
+          </div>
+        </div>
+
       )}
 
       {userRole === "user" && (

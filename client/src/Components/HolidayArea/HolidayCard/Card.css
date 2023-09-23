@@ -1,15 +1,24 @@
 .card {
   width: 300px;
-  height: 450px;
+  /* height: 500px; */
   background-color: #fff;
   border-radius: 5px;
-  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2); 
-   padding: 20px;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
+  padding: 20px;
   margin-bottom: 20px;
   margin-left: 40px;
   font-family: 'Ubuntu', sans-serif;
-  
+
 }
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 250px;
+  /* or any width you want */
+}
+
 
 .card-header-line {
   height: 1px;
@@ -24,11 +33,14 @@
   margin-bottom: 10px;
   font-family: 'Ubuntu', sans-serif;
 }
+
 .card-text {
-  font-size: 16px; 
-  color: #333; 
-  margin-bottom: 15px; 
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 15px;
+  height: 70px;
 }
+
 .card-date {
   font-size: 14px;
   color: #888;
@@ -67,13 +79,14 @@
 .follow-button.followed {
   background-color: #a1a1a1;
 }
- .DeleteHoliday{
+
+.DeleteHoliday {
   display: flex;
   flex-direction: column;
   justify-content: baseline;
- }
+}
 
- .delete-icon {
+.delete-icon {
   position: absolute;
   top: 0;
   left: 0;

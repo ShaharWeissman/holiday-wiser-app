@@ -31,7 +31,7 @@ function Login(): JSX.Element {
       .then((response) => {
         notifyService.success("you have been logged in");
         const [role, token, id] = response.data.split(":");
-        console.log({ r: response.data });
+        console.log({ r: response.data, s: { role, token, id } });
         LocalStorageService.set("user", role);
         LocalStorageService.set("token", token);
         LocalStorageService.set("id", id);
