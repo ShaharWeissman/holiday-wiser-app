@@ -29,6 +29,15 @@ const HolidayList: FC<Props> = ({
     (state: { mode: CheckedMode }) => state.mode
   );
 
+  const chnageHolidayFollowData = (holiday: HolidayModel) => {
+    const holidays = [...filteredHolidays];
+    const index = holidays.findIndex(
+      (h) => h.id === holiday.id
+    );
+    holidays[index] = holiday;
+    setFilteredHolidays(holidays);
+  };
+
   useEffect(() => {
     //get holidays:
     holidaysService
@@ -73,8 +82,8 @@ const HolidayList: FC<Props> = ({
   return (
     <div className="HolidayList">
       {filteredHolidays?.length &&
-        filteredHolidays.map((holiday: HolidayModel) => (
-          <div key={holiday.id}>
+        filteredHolidays.map((holiday: HolidayModel, key) => (
+          <div key={holiday.id + key}>
             <Card
               onClick={() => handleClickedCard(holiday)}
               id={holiday.id}
@@ -92,10 +101,12 @@ const HolidayList: FC<Props> = ({
               onAddFollow={() => {
                 holiday.followerCount = holiday.followerCount + 1;
                 holiday.isFollowed = holiday.isFollowed === 0 ? 1 : 0;
+                chnageHolidayFollowData(holiday)
               }}
               onRemoveFollow={() => {
                 holiday.followerCount = holiday.followerCount - 1;
                 holiday.isFollowed = holiday.isFollowed === 0 ? 1 : 0;
+                chnageHolidayFollowData(holiday)
               }}
             />
           </div>
