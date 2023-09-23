@@ -24,6 +24,8 @@ const HolidayList: FC<Props> = ({
 }) => {
   const [holidays, setHolidays] = useState<HolidayModel[]>([]);
   const [filteredHolidays, setFilteredHolidays] = useState<HolidayModel[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   const filterHolidaysMode = useSelector(
     (state: { mode: CheckedMode }) => state.mode
@@ -77,42 +79,68 @@ const HolidayList: FC<Props> = ({
     setFilteredHolidays(filtered);
   }, [filterHolidaysMode]);
 
+
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filteredHolidays]);
+
   const handleClickedCard = (holiday: HolidayModel) => {
     onClickedCard?.(holiday);
   };
 
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredHolidays.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+
   return (
-    <div className="HolidayList">
-      {filteredHolidays?.length &&
-        filteredHolidays.map((holiday: HolidayModel, key) => (
-          <div key={holiday.id + key}>
-            <Card
-              onClick={() => handleClickedCard(holiday)}
-              id={holiday.id}
-              destination={holiday.destination}
-              description={holiday.description}
-              start_date={new Date(holiday.start_date)}
-              end_date={new Date(holiday.end_date)}
-              price={holiday.price}
-              image_url={holiday.image_url}
-              onEditHoliday={onEditHoliday}
-              hideFollowButton={hideFollowButton}
-              onDeleteHoliday={onDeleteHoliday}
-              isFollowed={holiday.isFollowed}
-              followerCount={holiday.followerCount}
-              onAddFollow={() => {
-                holiday.followerCount = holiday.followerCount + 1;
-                holiday.isFollowed = holiday.isFollowed === 0 ? 1 : 0;
-                chnageHolidayFollowData(holiday)
-              }}
-              onRemoveFollow={() => {
-                holiday.followerCount = holiday.followerCount - 1;
-                holiday.isFollowed = holiday.isFollowed === 0 ? 1 : 0;
-                chnageHolidayFollowData(holiday)
-              }}
-            />
-          </div>
-        ))}
+    <div className="container">
+      
+      <div className="pagination-controls">
+        <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <span>Page {currentPage}</span>
+        <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(filteredHolidays.length / itemsPerPage)}>
+          Next
+        </button>
+      </div>
+
+      <div className="HolidayList">
+        {currentItems?.length &&
+          currentItems.map((holiday: HolidayModel, key) => (
+            <div key={holiday.id + key}>
+              <Card
+                onClick={() => handleClickedCard(holiday)}
+                id={holiday.id}
+                destination={holiday.destination}
+                description={holiday.description}
+                start_date={new Date(holiday.start_date)}
+                end_date={new Date(holiday.end_date)}
+                price={holiday.price}
+                image_url={holiday.image_url}
+                onEditHoliday={onEditHoliday}
+                hideFollowButton={hideFollowButton}
+                onDeleteHoliday={onDeleteHoliday}
+                isFollowed={holiday.isFollowed}
+                followerCount={holiday.followerCount}
+                onAddFollow={() => {
+                  holiday.followerCount = holiday.followerCount + 1;
+                  holiday.isFollowed = holiday.isFollowed === 0 ? 1 : 0;
+                  chnageHolidayFollowData(holiday)
+                }}
+                onRemoveFollow={() => {
+                  holiday.followerCount = holiday.followerCount - 1;
+                  holiday.isFollowed = holiday.isFollowed === 0 ? 1 : 0;
+                  chnageHolidayFollowData(holiday)
+                }}
+              />
+            </div>
+          ))}
+      </div>
     </div>
   );
 };
